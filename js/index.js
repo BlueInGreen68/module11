@@ -29,10 +29,61 @@ let fruits = JSON.parse(fruitsJSON);
 const display = () => {
   // TODO: очищаем fruitsList от вложенных элементов,
   // чтобы заполнить актуальными данными из fruits
+  fruitsList.replaceChildren();
+
+  fruits.map(function (item, index) {
+    return item.index = index;
+  });
 
   for (let i = 0; i < fruits.length; i++) {
     // TODO: формируем новый элемент <li> при помощи document.createElement,
     // и добавляем в конец списка fruitsList при помощи document.appendChild
+    const li = document.createElement('li');
+
+    const divWrapper = document.createElement('div');
+    divWrapper.className = "fruit__info";
+    li.appendChild(divWrapper);
+
+    const divIndex = document.createElement('div');
+    const divKind = document.createElement('div');
+    const divColor = document.createElement('div');
+    const divWeight = document.createElement('div');
+
+    divIndex.innerText = `index: ${fruits[i].index}`;
+    divWrapper.appendChild(divIndex);
+
+    divKind.innerText = `kind: ${fruits[i].kind}`;
+    divWrapper.appendChild(divKind);
+
+    divColor.innerText = `color: ${fruits[i].color}`;
+    divWrapper.appendChild(divColor);
+
+    divWeight.innerText = `weight: ${fruits[i].weight}`;
+    divWrapper.appendChild(divWeight);
+
+    switch (fruits[i].color) {
+      case 'фиолетовый':
+        li.className = `fruit__item fruit_violet`;
+        break;
+
+      case 'зеленый':
+        li.className = `fruit__item fruit_green`;
+        break;
+
+      case 'розово-красный':
+        li.className = `fruit__item fruit_carmazin`;
+        break;
+
+      case 'желтый':
+        li.className = `fruit__item fruit_yellow`;
+        break;
+
+      case 'светло-коричневый':
+        li.className = `fruit__item fruit_lightbrown`;
+        break;
+    }
+
+    fruitsList.appendChild(li);
   }
 };
 
@@ -47,13 +98,15 @@ const getRandomInt = (min, max) => {
 };
 
 // перемешивание массива
+
+let prevResult = [];
+
 const shuffleFruits = () => {
   let result = [];
 
-  // ATTENTION: сейчас при клике вы запустите бесконечный цикл и браузер зависнет
-  while (fruits.length > 0) {
+  for (let i = 0; i < fruits.length; i++) {
     // TODO: допишите функцию перемешивания массива
-    //
+    result.push(fruits[getRandomInt(0, fruits.length - 1)]);
     // Подсказка: находим случайный элемент из fruits, используя getRandomInt
     // вырезаем его из fruits и вставляем в result.
     // ex.: [1, 2, 3], [] => [1, 3], [2] => [3], [2, 1] => [], [2, 1, 3]
@@ -61,6 +114,13 @@ const shuffleFruits = () => {
   }
 
   fruits = result;
+
+  if (JSON.stringify(fruits) === JSON.stringify(prevResult)) {
+    alert("Порядок не изменился");
+    fruits = JSON.parse(fruitsJSON)
+  }
+
+  prevResult = result;
 };
 
 shuffleButton.addEventListener('click', () => {
